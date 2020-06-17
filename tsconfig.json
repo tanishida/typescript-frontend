@@ -1,0 +1,62 @@
+{
+	"compilerOptions": {
+    "esModuleInterop": true,
+    // 出力するjsのモジュールの仕組みとして何を使用するかを指定
+    "module": "es2020",
+    // 出力するjsのバージョン指定
+    "target": "es2020",
+    // ファイルの出力先を指定
+    "outDir": "./dist",
+    "noFallthroughCasesInSwitch": true,
+    // コンパイル結果を出力する tureで出力しない
+    "noEmit": false,
+    // 暗黙的にanyになる値をエラーにする。
+    "noImplicitAny": true,
+    // 条件分岐に全てのreturnがない場合はエラー
+    "noImplicitReturns": true,
+    // 使われているthisの型が暗黙的にanyになる場合にエラー
+		"noImplicitThis": true,
+    "noImplicitUseStrict": true,
+    // jsのmapファイルを作成する
+    "sourceMap": true,
+    // bind, call, applyを使用する際に、より厳密に型チェックが行われるようになる。
+		"strictBindCallApply": true,
+    "strictFunctionTypes": false,
+    // Nullableな値に対してプロパティの呼び出しを行う記述をエラーにする。
+    "strictNullChecks": true,
+    // クラス定義時、インスタンス変数の初期化が宣言時、もしくはコンストラクタのどちらでも行われていない場合にエラー
+    "strictPropertyInitialization": false,
+    // tsxファイルをreactの形式に出力する
+    "jsx": "react",
+    // 使用されていない変数を許可する trueでエラーにする
+    "noUnusedLocals": false,
+    // コンパイルする際に使用する組み込みライブラリを指定
+		"lib": [
+			"dom",
+			"es2020"
+		],
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"moduleResolution": "node",
+		"typeRoots": [
+			"node_modules/@types",
+			"app/typings"
+    ],
+    // カレントディレクトリを指定
+		"baseUrl": "./",
+		"plugins": [
+			{
+				"name": "typescript-styled-plugin"
+			}
+		]
+	},
+  "paths": {},
+  // コンパイルするファイルを指定する
+	"include": [
+		"./src/**/*"
+  ],
+  // コンパイルから外すファイルを指定する
+	"exclude": [
+		"node_modules"
+	]
+}
