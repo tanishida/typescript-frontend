@@ -1,9 +1,10 @@
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import { Redirect, Route, RouteComponentProps, Switch, withRouter} from 'react-router-dom';
+import { Redirect, Route, RouteComponentProps, Switch, withRouter, Link} from 'react-router-dom';
 import {AppContainer} from './app.styled';
 import {RootState} from './duck/types';
 import {Login} from './page/login/login';
+import {Body} from './page/body/body';
 import {Authenticated} from './page/authenticated/authenticated';
 
 const AppComponent: React.FC<RouteComponentProps> = () => {
@@ -14,7 +15,8 @@ const AppComponent: React.FC<RouteComponentProps> = () => {
     return (
       <Switch>
         <Route path={'/login'} component={Login} exact />
-          <Authenticated path={'/home'} component={Login} exact />
+        <Route path={'/home'} component={Body} exact />
+          <Authenticated path={'/home'} component={Body} exact />
           <Redirect exact from="/*" to={{pathname: '/home'}} />
       </Switch>
     ); 
