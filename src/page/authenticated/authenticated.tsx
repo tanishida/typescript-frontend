@@ -12,6 +12,6 @@ export const Authenticated: React.FC<RouteProps> = ({...children}) => {
     case appReducer.isLogin:
       return <Route {...children} />;
     default:
-      return <Redirect to={{pathname: '/login'}} />;
+      return <Redirect to={'/login'} />;
   }
 };

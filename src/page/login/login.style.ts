@@ -3,27 +3,36 @@ import { createMuiTheme, withStyles, makeStyles, ThemeProvider } from '@material
 import { green, blue } from '@material-ui/core/colors';
 
 export const useStyles = makeStyles(theme => ({
-    root: {
-      '& > *': {
-        margin: theme.spacing(1),
-        width: '25ch',
-      },
-    },
-    margin: {
+  root: {
+    '& > *': {
       margin: theme.spacing(1),
+      width: '25ch',
     },
-    withoutLabel: {
-      marginTop: theme.spacing(3),
-    },
-    textField: {
-      width: "100%",
-      marginTop: "50px"
-    },
-    button: {
-      width: "100%",
-      marginTop: "50px"
-    }
-  }));
+  },
+  margin: {
+    margin: theme.spacing(1),
+  },
+  withoutLabel: {
+    marginTop: theme.spacing(3),
+  },
+  textField: {
+    width: "90%",
+    textAlign: 'center',
+    marginTop: "25px"
+  },
+  button: {
+    width: "90%",
+    marginTop: "25px",
+    marginBottom: "10px"
+  }
+}));
+
+export const messageStyles = makeStyles(theme => ({
+  root: {
+    color: '#f44336',
+    textAlign: 'start'
+  }
+}));
 
 export const ColorButton = withStyles((theme) => ({
     root: {
