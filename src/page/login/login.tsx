@@ -92,7 +92,7 @@ export const Login: React.FC = ({}) => {
   } else {
     return (
       <div>
-        <Grid container spacing={2}>
+        <Grid container>
           <Grid item xs={3} />
             <Grid item xs={6}>
               <Card style={{textAlign: 'center'}}>

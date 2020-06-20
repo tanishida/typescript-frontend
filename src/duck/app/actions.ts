@@ -11,3 +11,8 @@ export const showLodingScreenAction = () => ({
 export const isLogoutAction = () => ({
     type: ActionTypes.DESTROY_SESSION
 });
+
+export const changeCompomentAction = (componentType: string) => ({
+    type: ActionTypes.CHANGE_COMPONENT,
+    componentType
+});

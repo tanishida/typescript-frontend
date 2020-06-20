@@ -35,11 +35,11 @@ export const messageStyles = makeStyles(theme => ({
 }));
 
 export const ColorButton = withStyles((theme) => ({
-    root: {
-      color: 'white',
-      backgroundColor: blue[500],
-      '&:hover': {
-        backgroundColor: blue[700],
-      },
+  root: {
+    color: 'white',
+    backgroundColor: blue[500],
+    '&:hover': {
+      backgroundColor: blue[700],
     },
+  },
 }))(Button);

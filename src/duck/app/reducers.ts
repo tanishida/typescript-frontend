@@ -8,6 +8,7 @@ const initialState: (
   return {
     isLoading: false,
     isLogin: false,
+    componentType: 'list',
     ...injects
   };
 };
@@ -31,6 +32,11 @@ const appReducer = (
       return { 
         ...state,
         isLogin: false
+      };
+    case ActionTypes.CHANGE_COMPONENT:
+      return { 
+        ...state,
+        componentType: action.componentType
       };
     default: const _: never = action;
       return state; 

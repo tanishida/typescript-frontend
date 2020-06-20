@@ -1,25 +1,50 @@
 import React, {useEffect} from 'react';
+import clsx from 'clsx';
 import {useDispatch, useSelector} from 'react-redux';
+import Drawer from '@material-ui/core/Drawer';
 import {RootState} from '../../duck/types';
-import {useStyles} from './header.style';
-import AppBar from '@material-ui/core/AppBar';
+import {useTheme} from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
+import List from '@material-ui/core/List';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import AccountCircle from '@material-ui/icons/AccountCircle';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Tooltip from '@material-ui/core/Tooltip';
+import AppBar from '@material-ui/core/AppBar';
+import {isLogoutAction, changeCompomentAction} from '../../duck/app/actions';
+import {useStyles, IconContainer} from './header.style';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import {isLogoutAction} from '../../duck/app/actions';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import BorderColorIcon from '@material-ui/icons/BorderColor';
+import ContactsIcon from '@material-ui/icons/Contacts';
+import {constant} from '../../helper/common/common';
+import ListIcon from '@material-ui/icons/List';
 
 export const Header: React.FC = ({}) => {
   const selectAppReducer = (state: RootState) => state.app;
   const appReducer = useSelector(selectAppReducer);
   const dispatch = useDispatch();
-  const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+  const openLogout = Boolean(anchorEl);
+  const classes = useStyles();
+  const theme = useTheme();
+  const [open, setOpen] = React.useState(false);
 
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
   const handleMenu = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
@@ -31,17 +56,34 @@ export const Header: React.FC = ({}) => {
     dispatch(isLogoutAction());
     location.href = '/#/login';
   };
-
+  const changeComponent = (text: string) => {
+    dispatch(changeCompomentAction(text));
+  }
   return (
-    <AppBar position="static">
+    <div className={classes.root}>
+      <CssBaseline />
+      <AppBar
+        position="fixed"
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: open,
+        })}
+      >
         <Toolbar>
-        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-          <MenuIcon />
-        </IconButton>
-        <Typography variant="h6" className={classes.title}>
-          メニュー
-        </Typography>
-          <div>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            className={clsx(classes.menuButton, {
+              [classes.hide]: open,
+            })}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" noWrap>
+            ホーム画面
+          </Typography>
+          <IconContainer>
             <IconButton
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
@@ -49,7 +91,7 @@ export const Header: React.FC = ({}) => {
                 onClick={handleMenu}
                 color="inherit"
             >
-                <AccountCircle />
+              <AccountCircle style={{fontSize: 30}} />
             </IconButton>
             <Menu
                 id="menu-appbar"
@@ -63,13 +105,63 @@ export const Header: React.FC = ({}) => {
                 vertical: 'top',
                 horizontal: 'right',
                 }}
-                open={open}
+                open={openLogout}
                 onClose={handleClose}
             >
                 <MenuItem onClick={onLogout}>ログアウト</MenuItem>
             </Menu>
-          </div>
+          </IconContainer>
         </Toolbar>
-    </AppBar>
-  )
+      </AppBar>
+      <Drawer
+        variant="permanent"
+        className={clsx(classes.drawer, {
+          [classes.drawerOpen]: open,
+          [classes.drawerClose]: !open,
+        })}
+        classes={{
+          paper: clsx({
+            [classes.drawerOpen]: open,
+            [classes.drawerClose]: !open,
+          }),
+        }}
+      >
+        <div className={classes.toolbar}>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </IconButton>
+        </div>
+        <Divider />
+        <List>
+          <Tooltip title="イベント一覧">
+            <ListItem button onClick={() => changeComponent(constant.LIST)}>
+              <ListItemIcon>
+                <ListIcon />
+              </ListItemIcon>
+              <ListItemText primary={'イベント一覧'} />
+            </ListItem>
+          </Tooltip>
+          <Tooltip title="イベントを登録">
+            <ListItem button onClick={() => changeComponent(constant.ADD)}>
+              <ListItemIcon>
+                <BorderColorIcon />
+              </ListItemIcon>
+              <ListItemText primary={'イベントを登録'} />
+            </ListItem>
+          </Tooltip>
+        </List>
+        <Divider />
+        <List>
+          <Tooltip title="連絡先">
+            <ListItem button>
+              <ListItemIcon>
+                <ContactsIcon />
+              </ListItemIcon>
+              <ListItemText primary={'連絡先'} />
+            </ListItem>
+          </Tooltip>
+        </List>
+      </Drawer>
+    </div>
+  );
 }
