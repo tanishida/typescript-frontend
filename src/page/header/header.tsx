@@ -59,6 +59,16 @@ export const Header: React.FC = ({}) => {
   const changeComponent = (text: string) => {
     dispatch(changeCompomentAction(text));
   }
+  const selectTitle = (type: string) => {
+    switch (type) {
+      case constant.LIST:
+        return 'ボードゲーム一覧';
+      case constant.ADD:
+        return '登録';
+      default:
+        return 'ボードゲーム一覧';
+    }
+  }
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -81,7 +91,7 @@ export const Header: React.FC = ({}) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            ホーム画面
+            {selectTitle(appReducer.componentType)}
           </Typography>
           <IconContainer>
             <IconButton
@@ -133,20 +143,20 @@ export const Header: React.FC = ({}) => {
         </div>
         <Divider />
         <List>
-          <Tooltip title="イベント一覧">
+          <Tooltip title="ボードゲーム一覧">
             <ListItem button onClick={() => changeComponent(constant.LIST)}>
               <ListItemIcon>
                 <ListIcon />
               </ListItemIcon>
-              <ListItemText primary={'イベント一覧'} />
+              <ListItemText primary={'ボードゲーム一覧'} />
             </ListItem>
           </Tooltip>
-          <Tooltip title="イベントを登録">
+          <Tooltip title="ボードゲームを登録">
             <ListItem button onClick={() => changeComponent(constant.ADD)}>
               <ListItemIcon>
                 <BorderColorIcon />
               </ListItemIcon>
-              <ListItemText primary={'イベントを登録'} />
+              <ListItemText primary={'ボードゲームを登録'} />
             </ListItem>
           </Tooltip>
         </List>

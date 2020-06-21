@@ -27,11 +27,11 @@ export const Body: React.FC = ({}) => {
       <div>
         <Header />
         <Grid container>
-          <Grid item xs={2} />
-          <Grid item xs={8}>
+          <Grid item xs={1} />
+          <Grid item xs={10}>
             {selectComponent(appReducer.componentType)}
           </Grid>
-          <Grid item xs={2} />
+          <Grid item xs={1} />
         </Grid>
       </div>
   )

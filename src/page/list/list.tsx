@@ -14,36 +14,32 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
+import {asyncActions} from '../../helper/common/actions';
 
 const columns = [
-  { id: 'time', label: '日時', minWidth: 100 },
-  { id: 'name', label: 'イベント名', minWidth: 100 },
+  { id: 'time', label: '購入日', minWidth: 100 },
+  { id: 'name', label: '名称', minWidth: 100 },
   {
     id: 'kibo',
-    label: '規模',
+    label: 'プレイ人数',
+    minWidth: 100
+  },
+  {
+    id: 'playTime',
+    label: 'プレイ時間',
     minWidth: 170
   },
   {
-    id: 'updateTime',
-    label: '更新日',
-    minWidth: 170
+    id: 'price',
+    label: 'お値段（円）',
+    minWidth: 100
   },
   {
-    id: 'addTime',
-    label: '登録日',
-    minWidth: 170
+    id: 'count',
+    label: 'プレイ回数',
+    minWidth: 100
   },
 ];
-function createData(time: string, name: string, updateTime: string, addTime: string) {
-  return {
-    time: time,
-    name: name,
-    updateTime: updateTime,
-    addTime: addTime
-  };
-}
-
-const rows: any[] = [];
 
 export const List: React.FC = ({}) => {
   const selectAppReducer = (state: RootState) => state.app;
@@ -52,6 +48,7 @@ export const List: React.FC = ({}) => {
 
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
+  const [rows, setRows] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleChangePage = (event: any, newPage: any) => {
@@ -62,6 +59,13 @@ export const List: React.FC = ({}) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+  useEffect(() => {
+    asyncActions.getBoardGameListAction()
+    .then((res: any) => {
+      setRows(res);
+    })
+    .catch(err => console.log(err));
+  });
   return (
     <TableStyledContainer>
       <Paper className={classes.root}>
@@ -69,9 +73,9 @@ export const List: React.FC = ({}) => {
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
-                {columns.map((column) => (
+                {columns.map((column, index) => (
                   <TableCell
-                    key={column.id}
+                    key={index}
                     align={'center'}
                     style={{ minWidth: column.minWidth }}
                   >
@@ -81,29 +85,25 @@ export const List: React.FC = ({}) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((column, index) => {
+              {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
                 return (
-                  <div key={index}>
-                    <TableCell align={'center'}>
-                      {column.time}
-                    </TableCell>
-                    <TableCell align={'center'}>
-                      {column.name}
-                    </TableCell>
-                    <TableCell align={'center'}>
-                      {column.updateTime}
-                    </TableCell>
-                    <TableCell align={'center'}>
-                      {column.addTime}
-                    </TableCell>
-                  </div>
+                  <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                    {columns.map((column, index) => {
+                      const value = row[column.id];
+                      return (
+                        <TableCell key={index} align={'center'}>
+                          {value}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
                 );
               })}
             </TableBody>
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
+          rowsPerPageOptions={[10, 20, 50, 100]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}
