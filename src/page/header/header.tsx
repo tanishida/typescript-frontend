@@ -54,7 +54,7 @@ export const Header: React.FC = ({}) => {
   };
   const onLogout = () => {
     dispatch(isLogoutAction());
-    location.href = '/#/login';
+    location.href = '../#/login';
   };
   const changeComponent = (text: string) => {
     dispatch(changeCompomentAction(text));

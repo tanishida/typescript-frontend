@@ -16,3 +16,14 @@ export const changeCompomentAction = (componentType: string) => ({
     type: ActionTypes.CHANGE_COMPONENT,
     componentType
 });
+
+export const showDetailDialogAction = (isDetailDialogDisabled: boolean) => ({
+    type: ActionTypes.SHOW_DETAIL_DIALOG,
+    isDetailDialogDisabled
+});
+
+export const addListAction = (listArray: []) => ({
+    type: ActionTypes.ADD_LIST,
+    listArray
+});
+

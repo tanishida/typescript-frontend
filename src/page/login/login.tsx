@@ -87,7 +87,7 @@ export const Login: React.FC = ({}) => {
   };
 
   if (appReducer.isLogin) {
-    location.href = '/#/home';
+    location.href = '../#/home';
     return <Body />;
   } else {
     return (

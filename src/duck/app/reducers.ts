@@ -9,6 +9,8 @@ const initialState: (
     isLoading: false,
     isLogin: false,
     componentType: 'list',
+    isDetailDialogDisabled: false,
+    listArray: [],
     ...injects
   };
 };
@@ -37,6 +39,16 @@ const appReducer = (
       return { 
         ...state,
         componentType: action.componentType
+      };
+    case ActionTypes.SHOW_DETAIL_DIALOG:
+      return { 
+        ...state,
+        isDetailDialogDisabled: action.isDetailDialogDisabled
+      };
+    case ActionTypes.ADD_LIST:
+      return { 
+        ...state,
+        listArray: action.listArray
       };
     default: const _: never = action;
       return state; 

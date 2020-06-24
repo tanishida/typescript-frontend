@@ -10,8 +10,9 @@ export const asyncActions = {
         name: string,
         kibo: string,
         playTime: string,
-        price: any,
-        count: any
+        price: string,
+        count: string,
+        detail: string
     ) => {
         const body = new FormData();
         body.append('time', time);
@@ -20,6 +21,7 @@ export const asyncActions = {
         body.append('playTime', playTime);
         body.append('price', price);
         body.append('count', count);
+        body.append('detail', detail);
         await fetch(asyncConstant.LOCAL_URL + asyncConstant.ADD_BOARD_GAME, {
           mode: 'cors',
           method: 'POST',
@@ -32,6 +34,19 @@ export const asyncActions = {
           method: 'GET'
         }).catch(err => console.log(`'${err}'【GET】board game list`));
         return await response.json();
+    },
+    putBoardGameListAction: async (id: string, counterType: string, type: string, editDetail: string) => {
+        const body = new FormData();
+        body.append('counterType', counterType);
+        body.append('type', type);
+        body.append('editDetail', editDetail);
+        await fetch(
+          asyncConstant.LOCAL_URL + asyncConstant.PUT_BOARD_GAME + id, 
+        {
+          mode: 'cors',
+          method: 'PUT',
+          body
+        }).catch(err => console.log(`'${err}'【GET】board game list`));
     }
 }
   

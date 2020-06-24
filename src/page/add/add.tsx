@@ -1,24 +1,28 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import {RootState} from '../../duck/types';
 import Button from '@material-ui/core/Button';
-import {isLogoutAction} from '../../duck/app/actions';
-import {Header} from '../header/header';
-import Typography from '@material-ui/core/Typography';
 import DateFnsUtils from '@date-io/date-fns';
 import jaLocale from "date-fns/locale/ja";
 import format from "date-fns/format";
 import {MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers';
 import {AddStyledContainer, useStyles} from './add.style';
 import TextField from '@material-ui/core/TextField';
-import NumberFormat from 'react-number-format';
 import PropTypes from 'prop-types';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import MaskedInput from 'react-text-mask';
 import {asyncActions} from '../../helper/common/actions';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+import InputAdornment from '@material-ui/core/InputAdornment';
+
+const Alert = (props: any) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 class ExtendedUtils extends DateFnsUtils {
   getCalendarHeaderText(date: any) {
@@ -36,14 +40,15 @@ export const Add: React.FC = ({}) => {
   const classes = useStyles();
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [nameValue, setNameValue] = React.useState('');
+  const [isDisabled, setIsDisabled] = React.useState(false);
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const [detail, setDetail] = React.useState('');
+  const [player, setPlayer] = React.useState('3-5人');
+  const [values, setValues] = React.useState({
+    pliceValue: '3000',
+    playTimeValue: '15',
+  });
 
-  const onChangeNameValue = (e: any) => {
-    setNameValue(e.target.value);
-  }
-
-  const handleDateChange = (date: any) => {
-    setSelectedDate(date);
-  };
   const TextMaskCustom = (props: any) => {
     const { inputRef, ...other } = props;
   
@@ -53,104 +58,85 @@ export const Add: React.FC = ({}) => {
         ref={(ref: any) => {
           inputRef(ref ? ref.inputElement : null);
         }}
-        mask={['(', /\d/, '-', /\d/, ')', '人']}
+        mask={[ /\d/, '-', /\d/, '人']}
         placeholderChar={'\u2000'}
         showMask
-        onBlur={() => {}}
+        value={player}
+        onBlur={handleChangePlayer}
       />
     );
   }
   TextMaskCustom.propTypes = {
     inputRef: PropTypes.func.isRequired,
   };
-  const NumberFormatCustom = (props: any) => {
-    const { inputRef, onChange, ...other } = props;
-  
-    return (
-      <NumberFormat
-        {...other}
-        getInputRef={inputRef}
-        onValueChange={(values :any) => {
-          onChange({
-            target: {
-              name: props.name,
-              value: values.value,
-            },
-          });
-        }}
-        thousandSeparator
-        isNumericString
-        prefix="¥"
-      />
-    );
+
+  const onChangeNameValue = (e: any) => {
+    setNameValue(e.target.value);
   }
-  NumberFormatCustom.propTypes = {
-    inputRef: PropTypes.func.isRequired,
-    name: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-  };
-  const TimeNumberFormatCustom = (props: any) => {
-    const { inputRef, onChange, ...other } = props;
-  
-    return (
-      <NumberFormat
-        {...other}
-        getInputRef={inputRef}
-        onValueChange={(values :any) => {
-          onChange({
-            target: {
-              name: props.name,
-              value: values.value,
-            },
-          });
-        }}
-        thousandSeparator
-        isNumericString
-        suffix="分"
-      />
-    );
+  const handleChangePlayer = (e: any) => {
+    setPlayer(e.target.value)
   }
-  TimeNumberFormatCustom.propTypes = {
-    inputRef: PropTypes.func.isRequired,
-    name: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
+
+  const handleDateChange = (date: any) => {
+    setSelectedDate(date);
   };
-  const [values, setValues] = React.useState({
-    textmask: '(3-5)人',
-    numberformat: '3000',
-    timenumberformat: '15',
-  });
+  const handleDetailOnChange = (e: any) => {
+    setDetail(e.target.value);
+  }
 
   const handleChange = (event: any) => {
+    if (isNaN(event.target.value)) {
+      return;
+    }
     setValues({
       ...values,
       [event.target.name]: event.target.value,
     });
   };
+  const handleClick = () => {
+    setOpenSnackbar(true);
+  };
+
+  const handleClose = (event: any, reason: any) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenSnackbar(false);
+  };
 
   const onRegist = () => {
-    asyncActions
-    .postBoardGameAction(
-      selectedDate.toLocaleDateString(),
-      nameValue,
-      values.textmask,
-      values.timenumberformat,
-      values.numberformat,
-      '0'
-    )
-    .then(() => {
-      
-    })
-    .catch((err: any) => console.log(err));
+    setIsDisabled(true);
+    setTimeout(() => {
+      asyncActions
+      .postBoardGameAction(
+        selectedDate.toLocaleDateString(),
+        nameValue,
+        player,
+        values.playTimeValue + '分',
+        values.pliceValue + '円',
+        '0',
+        detail
+      )
+      .then(() => {
+        setIsDisabled(false);
+        handleClick();
+      })
+      .catch(err => {
+        console.log(err);
+        setIsDisabled(false);
+      });
+    }, 2000);
   };
   const clearState = () => {
     setNameValue('');
     setSelectedDate(new Date());
+    setPlayer('-人');
     setValues({
-      textmask: '',
-      numberformat: '',
-      timenumberformat: '',
+      pliceValue: '',
+      playTimeValue: '',
     });
+    setDetail('');
   }
   return (
       <AddStyledContainer>
@@ -164,6 +150,7 @@ export const Add: React.FC = ({}) => {
                   label="購入日"
                   format="yyyy/MM/dd"
                   value={selectedDate}
+                  disabled={isDisabled}
                   onChange={handleDateChange}
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
@@ -175,37 +162,39 @@ export const Add: React.FC = ({}) => {
                   id="standard-basic"
                   label="名称"
                   value={nameValue}
+                  disabled={isDisabled}
                   onChange={(e: any) => onChangeNameValue(e)}
                 />
               </form>
               <FormControl>
                 <InputLabel htmlFor="formatted-text-mask-input">プレイ人数</InputLabel>
                 <Input
-                  value={values.textmask}
-                  onChange={handleChange}
-                  name="textmask"
-                  id="formatted-text-mask-input"
+                  value={player}
+                  onChange={handleChangePlayer}
+                  disabled={isDisabled}
                   inputComponent={TextMaskCustom}
                 />
               </FormControl>
               <TextField
                 label="お値段（円）"
-                value={values.numberformat}
+                value={values.pliceValue}
+                name="pliceValue"
+                disabled={isDisabled}
                 onChange={handleChange}
-                name="numberformat"
                 id="formatted-numberformat-input"
                 InputProps={{
-                  inputComponent: NumberFormatCustom,
+                  startAdornment: <InputAdornment position="start">¥</InputAdornment>,
                 }}
               />
               <TextField
                 label="プレイ時間"
-                value={values.timenumberformat}
+                value={values.playTimeValue}
+                name="playTimeValue"
+                disabled={isDisabled}
+                className={classes.textField}
                 onChange={handleChange}
-                name="timenumberformat"
-                id="formatted-numberformat-input"
                 InputProps={{
-                  inputComponent: TimeNumberFormatCustom,
+                  endAdornment: <InputAdornment position="end">分</InputAdornment>,
                 }}
               />
             </div>
@@ -214,14 +203,50 @@ export const Add: React.FC = ({}) => {
 
           <Grid item xs={2} />
           <Grid item xs={8}>
+            <TextField
+              label="詳細"
+              multiline
+              fullWidth
+              rows={8}
+              disabled={isDisabled}
+              value={detail}
+              onChange={(e: any) => handleDetailOnChange(e)}
+            />
+          </Grid>
+          <Grid item xs={2} />
+
+          <Grid item xs={2} />
+          <Grid item xs={8}>
             <div className={classes.root}>
-              <Button onClick={onRegist} variant="contained" color="primary">
+              <Button
+                onClick={onRegist}
+                disabled={isDisabled}
+                variant="contained"
+                color="primary"
+              >
                 登録
               </Button>
-              <Button  onClick={clearState} variant="contained">
+              <Button
+                onClick={clearState}
+                disabled={isDisabled}
+                variant="contained"
+              >
                 クリア
               </Button>
+              <Snackbar
+                open={openSnackbar}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'top', horizontal: 'center'
+                }}
+              >
+                <Alert onClose={handleClose} severity="success">
+                  登録しました！
+                </Alert>
+              </Snackbar>
             </div>
+            <LinearProgress style={{display: isDisabled ? '' : 'none'}} />
           </Grid>
           <Grid item xs={2} />
         </Grid>
