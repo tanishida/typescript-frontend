@@ -1,7 +1,7 @@
 import {asyncConstant} from './common';
 
-const getParam = () => {
-
+const getPath = () => {
+  return asyncConstant.GLITCH_URL;
 }
 
 export const asyncActions = {
@@ -22,14 +22,14 @@ export const asyncActions = {
         body.append('price', price);
         body.append('count', count);
         body.append('detail', detail);
-        await fetch(asyncConstant.LOCAL_URL + asyncConstant.ADD_BOARD_GAME, {
+        await fetch(getPath() + asyncConstant.ADD_BOARD_GAME, {
           mode: 'cors',
           method: 'POST',
           body
         }).catch(err => console.log(`'${err}'【POST】add board game`));
     },
     getBoardGameListAction: async () => {
-        const response: any = await fetch(asyncConstant.LOCAL_URL + asyncConstant.GET_BOARD_GAME, {
+        const response: any = await fetch(getPath() + asyncConstant.GET_BOARD_GAME, {
           mode: 'cors',
           method: 'GET'
         }).catch(err => console.log(`'${err}'【GET】board game list`));
@@ -41,7 +41,7 @@ export const asyncActions = {
         body.append('type', type);
         body.append('editDetail', editDetail);
         await fetch(
-          asyncConstant.LOCAL_URL + asyncConstant.PUT_BOARD_GAME + id, 
+          getPath() + asyncConstant.PUT_BOARD_GAME + id, 
         {
           mode: 'cors',
           method: 'PUT',
