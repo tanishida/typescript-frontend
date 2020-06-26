@@ -11,6 +11,8 @@ const initialState: (
     componentType: 'list',
     isDetailDialogDisabled: false,
     listArray: [],
+    isDisabled: false,
+    openSnackbar: false,
     ...injects
   };
 };
@@ -49,6 +51,16 @@ const appReducer = (
       return { 
         ...state,
         listArray: action.listArray
+      };
+    case ActionTypes.DISABLED:
+      return { 
+        ...state,
+        isDisabled: !state.isDisabled
+      };
+    case ActionTypes.SNACKBAR:
+      return { 
+        ...state,
+        openSnackbar: action.openSnackbar
       };
     default: const _: never = action;
       return state; 

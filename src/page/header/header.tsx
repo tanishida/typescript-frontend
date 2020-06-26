@@ -19,7 +19,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Tooltip from '@material-ui/core/Tooltip';
 import AppBar from '@material-ui/core/AppBar';
 import {isLogoutAction, changeCompomentAction} from '../../duck/app/actions';
-import {useStyles, IconContainer} from './header.style';
+import {useStyles, IconContainer, usePhoneStyles} from './header.style';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -27,6 +27,7 @@ import BorderColorIcon from '@material-ui/icons/BorderColor';
 import ContactsIcon from '@material-ui/icons/Contacts';
 import {constant} from '../../helper/common/common';
 import ListIcon from '@material-ui/icons/List';
+import MediaQuery from 'react-responsive';
 
 export const Header: React.FC = ({}) => {
   const selectAppReducer = (state: RootState) => state.app;
@@ -35,6 +36,7 @@ export const Header: React.FC = ({}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openLogout = Boolean(anchorEl);
   const classes = useStyles();
+  const classes2 = usePhoneStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -69,9 +71,111 @@ export const Header: React.FC = ({}) => {
         return 'ボードゲーム一覧';
     }
   }
+  const logoutIcon = () => {
+    return (
+    <IconContainer>
+    <IconButton
+        aria-label="account of current user"
+        aria-controls="menu-appbar"
+        aria-haspopup="true"
+        onClick={handleMenu}
+        color="inherit"
+    >
+      <AccountCircle style={{fontSize: 30}} />
+    </IconButton>
+    <Menu
+        id="menu-appbar"
+        anchorEl={anchorEl}
+        anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+        }}
+        keepMounted
+        transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+        }}
+        open={openLogout}
+        onClose={handleClose}
+    >
+        <MenuItem onClick={onLogout}>ログアウト</MenuItem>
+    </Menu>
+  </IconContainer>
+    )
+  }
   return (
     <div className={classes.root}>
       <CssBaseline />
+      <MediaQuery query="(max-width: 767px)">
+        <AppBar
+          position="fixed"
+          className={clsx(classes2.appBar, {
+            [classes2.appBarShift]: open,
+          })}
+        >
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              className={clsx(classes2.menuButton, open && classes.hide)}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" noWrap>
+              {selectTitle(appReducer.componentType)}
+            </Typography>
+            {logoutIcon()}
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          className={classes2.drawer}
+          variant="persistent"
+          anchor="left"
+          open={open}
+          classes={{
+            paper: classes2.drawerPaper,
+          }}
+        >
+        <div className={classes.toolbar}>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </IconButton>
+        </div>
+        <Divider />
+        <List>
+          <Tooltip title="ボードゲーム一覧">
+            <ListItem button onClick={() => changeComponent(constant.LIST)}>
+              <ListItemIcon>
+                <ListIcon />
+              </ListItemIcon>
+              <ListItemText primary={'ボードゲーム一覧'} />
+            </ListItem>
+          </Tooltip>
+          <Tooltip title="ボードゲームを登録">
+            <ListItem button onClick={() => changeComponent(constant.ADD)}>
+              <ListItemIcon>
+                <BorderColorIcon />
+              </ListItemIcon>
+              <ListItemText primary={'ボードゲームを登録'} />
+            </ListItem>
+          </Tooltip>
+        </List>
+        <Divider />
+        <List>
+          <Tooltip title="連絡先">
+            <ListItem button>
+              <ListItemIcon>
+                <ContactsIcon />
+              </ListItemIcon>
+              <ListItemText primary={'連絡先'} />
+            </ListItem>
+          </Tooltip>
+        </List>
+        </Drawer>
+      </MediaQuery>
+      <MediaQuery query="(min-width: 768px)">
       <AppBar
         position="fixed"
         className={clsx(classes.appBar, {
@@ -93,34 +197,7 @@ export const Header: React.FC = ({}) => {
           <Typography variant="h6" noWrap>
             {selectTitle(appReducer.componentType)}
           </Typography>
-          <IconContainer>
-            <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-            >
-              <AccountCircle style={{fontSize: 30}} />
-            </IconButton>
-            <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-                }}
-                open={openLogout}
-                onClose={handleClose}
-            >
-                <MenuItem onClick={onLogout}>ログアウト</MenuItem>
-            </Menu>
-          </IconContainer>
+           {logoutIcon()}
         </Toolbar>
       </AppBar>
       <Drawer
@@ -172,6 +249,7 @@ export const Header: React.FC = ({}) => {
           </Tooltip>
         </List>
       </Drawer>
+      </MediaQuery>
     </div>
   );
 }

@@ -27,3 +27,11 @@ export const addListAction = (listArray: []) => ({
     listArray
 });
 
+export const disabledAction = () => ({
+    type: ActionTypes.DISABLED
+});
+
+export const openSnackberAction = (openSnackbar: boolean) => ({
+    type: ActionTypes.SNACKBAR,
+    openSnackbar
+});

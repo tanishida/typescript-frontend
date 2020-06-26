@@ -7,6 +7,8 @@ export const ActionTypes = {
   DESTROY_SESSION: 'app/DESTROY_SESSION',
   CHANGE_COMPONENT: 'app/CHANGE_COMPONENT',
   SHOW_DETAIL_DIALOG: 'app/SHOW_DETAIL_DIALOG',
+  DISABLED: 'app/DISABLED',
+  SNACKBAR: 'app/SNACKBAR',
   ADD_LIST: 'app/ADD_LIST'
 } as const;
 
@@ -18,4 +20,6 @@ export interface App {
   componentType: string;
   isDetailDialogDisabled: boolean;
   listArray: [];
+  isDisabled: boolean;
+  openSnackbar: boolean;
 }

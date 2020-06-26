@@ -8,6 +8,7 @@ import {Header} from '../header/header';
 import {List} from '../list/list';
 import {Add} from '../add/add';
 import {constant} from '../../helper/common/common';
+import MediaQuery from 'react-responsive';
 
 export const Body: React.FC = ({}) => {
   const selectAppReducer = (state: RootState) => state.app;
@@ -27,11 +28,18 @@ export const Body: React.FC = ({}) => {
       <div>
         <Header />
         <Grid container>
-          <Grid item xs={2} />
-          <Grid item xs={9}>
-            {selectComponent(appReducer.componentType)}
-          </Grid>
-          <Grid item xs={1} />
+          <MediaQuery query="(max-width: 767px)">
+            <Grid item xs={12}>
+              {selectComponent(appReducer.componentType)}
+            </Grid>
+          </MediaQuery>
+          <MediaQuery query="(min-width: 768px)">
+            <Grid item xs={2} />
+            <Grid item xs={9}>
+              {selectComponent(appReducer.componentType)}
+            </Grid>
+            <Grid item xs={1} />
+          </MediaQuery>
         </Grid>
       </div>
   )

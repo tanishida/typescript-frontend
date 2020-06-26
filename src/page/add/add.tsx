@@ -12,13 +12,14 @@ import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
 import MaskedInput from 'react-text-mask';
-import {asyncActions} from '../../helper/common/actions';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import {disabledAction, openSnackberAction} from '../../duck/app/actions';
+import {addBoardGame} from '../../duck/app/thunkAction';
+import FormControl from "@material-ui/core/FormControl";
 
 const Alert = (props: any) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -40,8 +41,6 @@ export const Add: React.FC = ({}) => {
   const classes = useStyles();
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [nameValue, setNameValue] = React.useState('');
-  const [isDisabled, setIsDisabled] = React.useState(false);
-  const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const [detail, setDetail] = React.useState('');
   const [player, setPlayer] = React.useState('3-5人');
   const [values, setValues] = React.useState({
@@ -61,8 +60,6 @@ export const Add: React.FC = ({}) => {
         mask={[ /\d/, '-', /\d/, '人']}
         placeholderChar={'\u2000'}
         showMask
-        value={player}
-        onBlur={handleChangePlayer}
       />
     );
   }
@@ -93,39 +90,25 @@ export const Add: React.FC = ({}) => {
       [event.target.name]: event.target.value,
     });
   };
-  const handleClick = () => {
-    setOpenSnackbar(true);
-  };
 
   const handleClose = (event: any, reason: any) => {
     if (reason === 'clickaway') {
       return;
     }
-
-    setOpenSnackbar(false);
+    dispatch(openSnackberAction(false));
   };
 
   const onRegist = () => {
-    setIsDisabled(true);
+    dispatch(disabledAction());
     setTimeout(() => {
-      asyncActions
-      .postBoardGameAction(
-        selectedDate.toLocaleDateString(),
+      dispatch(addBoardGame(
+        selectedDate,
         nameValue,
         player,
-        values.playTimeValue + '分',
-        values.pliceValue + '円',
-        '0',
+        values.playTimeValue,
+        values.pliceValue,
         detail
-      )
-      .then(() => {
-        setIsDisabled(false);
-        handleClick();
-      })
-      .catch(err => {
-        console.log(err);
-        setIsDisabled(false);
-      });
+      ))
     }, 2000);
   };
   const clearState = () => {
@@ -150,28 +133,26 @@ export const Add: React.FC = ({}) => {
                   label="購入日"
                   format="yyyy/MM/dd"
                   value={selectedDate}
-                  disabled={isDisabled}
+                  disabled={appReducer.isDisabled}
                   onChange={handleDateChange}
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
                   }}
                 />
               </MuiPickersUtilsProvider>
-              <form noValidate autoComplete="off">
                 <TextField 
                   id="standard-basic"
                   label="名称"
                   value={nameValue}
-                  disabled={isDisabled}
+                  disabled={appReducer.isDisabled}
                   onChange={(e: any) => onChangeNameValue(e)}
                 />
-              </form>
               <FormControl>
                 <InputLabel htmlFor="formatted-text-mask-input">プレイ人数</InputLabel>
                 <Input
                   value={player}
                   onChange={handleChangePlayer}
-                  disabled={isDisabled}
+                  disabled={appReducer.isDisabled}
                   inputComponent={TextMaskCustom}
                 />
               </FormControl>
@@ -179,7 +160,7 @@ export const Add: React.FC = ({}) => {
                 label="お値段（円）"
                 value={values.pliceValue}
                 name="pliceValue"
-                disabled={isDisabled}
+                disabled={appReducer.isDisabled}
                 onChange={handleChange}
                 id="formatted-numberformat-input"
                 InputProps={{
@@ -190,7 +171,7 @@ export const Add: React.FC = ({}) => {
                 label="プレイ時間"
                 value={values.playTimeValue}
                 name="playTimeValue"
-                disabled={isDisabled}
+                disabled={appReducer.isDisabled}
                 className={classes.textField}
                 onChange={handleChange}
                 InputProps={{
@@ -208,7 +189,7 @@ export const Add: React.FC = ({}) => {
               multiline
               fullWidth
               rows={8}
-              disabled={isDisabled}
+              disabled={appReducer.isDisabled}
               value={detail}
               onChange={(e: any) => handleDetailOnChange(e)}
             />
@@ -220,7 +201,7 @@ export const Add: React.FC = ({}) => {
             <div className={classes.root}>
               <Button
                 onClick={onRegist}
-                disabled={isDisabled}
+                disabled={appReducer.isDisabled}
                 variant="contained"
                 color="primary"
               >
@@ -228,25 +209,25 @@ export const Add: React.FC = ({}) => {
               </Button>
               <Button
                 onClick={clearState}
-                disabled={isDisabled}
+                disabled={appReducer.isDisabled}
                 variant="contained"
               >
                 クリア
               </Button>
               <Snackbar
-                open={openSnackbar}
+                open={appReducer.openSnackbar}
                 autoHideDuration={6000}
                 onClose={handleClose}
                 anchorOrigin={{
                   vertical: 'top', horizontal: 'center'
                 }}
               >
-                <Alert onClose={handleClose} severity="success">
+                <Alert onClose={handleClose}>
                   登録しました！
                 </Alert>
               </Snackbar>
             </div>
-            <LinearProgress style={{display: isDisabled ? '' : 'none'}} />
+            <LinearProgress style={{display: appReducer.isDisabled ? '' : 'none'}} />
           </Grid>
           <Grid item xs={2} />
         </Grid>

@@ -18,6 +18,7 @@ import {RootState} from '../../duck/types';
 import {ColorButton, useStyles, messageStyles} from './login.style';
 import {isLoginAction} from '../../duck/app/actions';
 import {Body} from '../body/body';
+import MediaQuery from 'react-responsive';
 
 export const Login: React.FC = ({}) => {
   const selectAppReducer = (state: RootState) => state.app;
@@ -93,57 +94,110 @@ export const Login: React.FC = ({}) => {
     return (
       <div>
         <Grid container>
+        <MediaQuery query="(max-width: 767px)">
+          <Grid item xs={12}>
+            <Card style={{textAlign: 'center'}}>
+            <Typography variant="h6">
+              ログイン
+            </Typography>
+            <form className={classes.root} noValidate>
+              <TextField 
+                className={clsx(classes.margin, classes.textField)} 
+                value={values.id}
+                onChange={handleChange("id")}
+                type={'text'}
+                label="login ID"
+                variant="outlined"
+                error={idError}
+                helperText={idMessage}
+              />
+            </form>
+            <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+              <InputLabel error={passError} htmlFor="outlined-adornment-password">password</InputLabel>
+              <OutlinedInput
+                type={showPassword ? "text" : "password"}
+                error={passError}
+                value={values.pass}
+                onChange={handleChange("pass")}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                labelWidth={70}
+              />
+              <FormHelperText className={messageStyle.root}>{passMessage}</FormHelperText>
+            </FormControl>
+            <ColorButton
+              variant="contained"
+              className={classes.button}
+              onClick={onLogin}
+            >
+              ログイン
+            </ColorButton>
+            </Card>
+          </Grid>
+        </MediaQuery>
+        <MediaQuery query="(min-width: 768px)">
           <Grid item xs={3} />
-            <Grid item xs={6}>
-              <Card style={{textAlign: 'center'}}>
-              <Typography variant="h6">
-                ログイン
-              </Typography>
-              <form className={classes.root} noValidate autoComplete="username">
-                <TextField 
-                  className={clsx(classes.margin, classes.textField)} 
-                  value={values.id}
-                  onChange={handleChange("id")}
-                  type={'text'}
-                  label="login ID"
-                  variant="outlined"
-                  error={idError}
-                  helperText={idMessage}
-                />
-              </form>
-              <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-                <InputLabel error={passError} htmlFor="outlined-adornment-password">password</InputLabel>
-                <OutlinedInput
-                  type={showPassword ? "text" : "password"}
-                  error={passError}
-                  value={values.pass}
-                  onChange={handleChange("pass")}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                      >
-                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  labelWidth={70}
-                />
-                <FormHelperText className={messageStyle.root}>{passMessage}</FormHelperText>
-              </FormControl>
-              <ColorButton
-                variant="contained"
-                className={classes.button}
-                onClick={onLogin}
-              >
-                ログイン
-              </ColorButton>
-              </Card>
-            </Grid>
+          <Grid item xs={6}>
+            <Card style={{textAlign: 'center'}}>
+            <Typography variant="h6">
+              ログイン
+            </Typography>
+            <form className={classes.root} noValidate>
+              <TextField 
+                className={clsx(classes.margin, classes.textField)} 
+                value={values.id}
+                onChange={handleChange("id")}
+                type={'text'}
+                label="login ID"
+                variant="outlined"
+                error={idError}
+                helperText={idMessage}
+              />
+            </form>
+            <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+              <InputLabel error={passError} htmlFor="outlined-adornment-password">password</InputLabel>
+              <OutlinedInput
+                type={showPassword ? "text" : "password"}
+                error={passError}
+                value={values.pass}
+                onChange={handleChange("pass")}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                labelWidth={70}
+              />
+              <FormHelperText className={messageStyle.root}>{passMessage}</FormHelperText>
+            </FormControl>
+            <ColorButton
+              variant="contained"
+              className={classes.button}
+              onClick={onLogin}
+            >
+              ログイン
+            </ColorButton>
+            </Card>
+          </Grid>
           <Grid item xs={3} />
+        </MediaQuery>
         </Grid>
       </div>
     );
