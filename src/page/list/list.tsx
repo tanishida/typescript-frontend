@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import {isLogoutAction, showDetailDialogAction, addListAction} from '../../duck/app/actions';
 import {Header} from '../header/header';
 import StorageIcon from '@material-ui/icons/Storage';
-import {useStyles, useBackDropStyles, TableStyledContainer, tableHeadTheme} from './list.style';
+import {useStyles, useBackDropStyles, tableHeadTheme} from './list.style';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -93,7 +93,7 @@ export const List: React.FC = () => {
     }, 1000);
   },[]);
   return (
-    <TableStyledContainer>
+    <div>
       <Backdrop className={backDropClasses.backdrop} open={open}>
         <CircularProgress color="inherit" />
       </Backdrop>
@@ -173,6 +173,7 @@ export const List: React.FC = () => {
           count={appReducer.listArray.length}
           rowsPerPage={rowsPerPage}
           page={page}
+          labelRowsPerPage={'1ページあたりの行数:'}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
@@ -181,6 +182,6 @@ export const List: React.FC = () => {
         name={dialogValues.name}
         detail={dialogValues.detail}
       />
-    </TableStyledContainer>
+    </div>
   );
 }

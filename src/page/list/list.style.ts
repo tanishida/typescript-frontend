@@ -26,5 +26,5 @@ export const useBackDropStyles = makeStyles((theme) => ({
 }));
 
 export const TableStyledContainer = styled.div`
-margin-top: 90px
+margin-top: 80px
 `;

@@ -7,7 +7,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import jaLocale from "date-fns/locale/ja";
 import format from "date-fns/format";
 import {MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers';
-import {AddStyledContainer, useStyles} from './add.style';
+import {useStyles} from './add.style';
 import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
 import Input from '@material-ui/core/Input';
@@ -122,7 +122,7 @@ export const Add: React.FC = ({}) => {
     setDetail('');
   }
   return (
-      <AddStyledContainer>
+      <div>
         <Grid container>
           <Grid item xs={2} />
           <Grid item xs={8}>
@@ -231,6 +231,6 @@ export const Add: React.FC = ({}) => {
           </Grid>
           <Grid item xs={2} />
         </Grid>
-      </AddStyledContainer>
+      </div>
   )
 }

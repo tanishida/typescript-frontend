@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 
 export const AddStyledContainer = styled.div`
-margin-top: 90px
+margin-top: 80px
 `;
 export const useStyles = makeStyles((theme) => ({
     root: {

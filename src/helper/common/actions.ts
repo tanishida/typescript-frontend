@@ -1,7 +1,12 @@
 import {asyncConstant} from './common';
 
 const getPath = () => {
-  return asyncConstant.GLITCH_URL;
+  switch (document.location.origin) {
+    case asyncConstant.LOCAL_FRONT_URL:
+      return asyncConstant.LOCAL_URL;
+    default:
+      return asyncConstant.GLITCH_URL;
+  }
 }
 
 export const asyncActions = {
@@ -47,6 +52,20 @@ export const asyncActions = {
           method: 'PUT',
           body
         }).catch(err => console.log(`'${err}'【GET】board game list`));
+    },
+    postDominionAction: async (
+      values: any[]
+    ) => {
+      const body = new FormData();
+      values.forEach(a => {
+        body.append(a.value, a.value)
+      });
+      const response: any = await fetch(getPath() + asyncConstant.PUT_DOMINION, {
+        mode: 'cors',
+        method: 'POST',
+        body
+      }).catch(err => console.log(`'${err}'【POST】doominion`));
+      return await response.json();
     }
 }
   

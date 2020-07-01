@@ -7,8 +7,10 @@ import {isLogoutAction} from '../../duck/app/actions';
 import {Header} from '../header/header';
 import {List} from '../list/list';
 import {Add} from '../add/add';
+import {Dominion} from '../dominion/dominion';
 import {constant} from '../../helper/common/common';
 import MediaQuery from 'react-responsive';
+import {BodyContainer} from './body.style';
 
 export const Body: React.FC = ({}) => {
   const selectAppReducer = (state: RootState) => state.app;
@@ -20,12 +22,14 @@ export const Body: React.FC = ({}) => {
         return <List />;
       case constant.ADD:
         return <Add />;
+      case constant.DOMINION:
+        return <Dominion />;
       default:
         return <List />;
     }
   }
   return (
-      <div>
+      <BodyContainer>
         <Header />
         <Grid container>
           <MediaQuery query="(max-width: 767px)">
@@ -41,6 +45,6 @@ export const Body: React.FC = ({}) => {
             <Grid item xs={1} />
           </MediaQuery>
         </Grid>
-      </div>
+      </BodyContainer>
   )
 }

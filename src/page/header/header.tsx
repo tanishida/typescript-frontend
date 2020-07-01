@@ -28,6 +28,7 @@ import ContactsIcon from '@material-ui/icons/Contacts';
 import {constant} from '../../helper/common/common';
 import ListIcon from '@material-ui/icons/List';
 import MediaQuery from 'react-responsive';
+import TransformIcon from '@material-ui/icons/Transform';
 
 export const Header: React.FC = ({}) => {
   const selectAppReducer = (state: RootState) => state.app;
@@ -67,6 +68,8 @@ export const Header: React.FC = ({}) => {
         return 'ボードゲーム一覧';
       case constant.ADD:
         return '登録';
+      case constant.DOMINION:
+        return 'ドミニオンのサプライ作成';
       default:
         return 'ボードゲーム一覧';
     }
@@ -164,6 +167,17 @@ export const Header: React.FC = ({}) => {
         </List>
         <Divider />
         <List>
+          <Tooltip title="ドミニオンセット作成">
+            <ListItem button onClick={() => changeComponent(constant.DOMINION)}>
+              <ListItemIcon>
+                <TransformIcon />
+              </ListItemIcon>
+              <ListItemText primary={'ドミニオンのセット作成'} />
+            </ListItem>
+          </Tooltip>
+        </List>
+        <Divider />
+        <List>
           <Tooltip title="連絡先">
             <ListItem button>
               <ListItemIcon>
@@ -234,6 +248,17 @@ export const Header: React.FC = ({}) => {
                 <BorderColorIcon />
               </ListItemIcon>
               <ListItemText primary={'ボードゲームを登録'} />
+            </ListItem>
+          </Tooltip>
+        </List>
+        <Divider />
+        <List>
+          <Tooltip title="ドミニオンセット作成">
+            <ListItem button onClick={() => changeComponent(constant.DOMINION)}>
+              <ListItemIcon>
+                <TransformIcon />
+              </ListItemIcon>
+              <ListItemText primary={'ドミニオンのセット作成'} />
             </ListItem>
           </Tooltip>
         </List>
