@@ -18,7 +18,7 @@ export const StyledTableCell = withStyles((theme: Theme) =>
 export const StyledTableRow = withStyles((theme: Theme) =>
   createStyles({
     root: {
-      backgroundColor: 'black'
+      backgroundColor: '#696969'
     }
   })
 )(TableRow);

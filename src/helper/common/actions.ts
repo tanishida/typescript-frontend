@@ -54,12 +54,26 @@ export const asyncActions = {
         }).catch(err => console.log(`'${err}'【GET】board game list`));
     },
     postDominionAction: async (
-      values: any[]
+      values: any[],
+      adventuresEvent: string,
+      traveler: string,
+      empiresEvent: string,
+      randmark: string,
+      project: string,
+      menagerieEvent: string,
+      way: string
     ) => {
       const body = new FormData();
       values.forEach(a => {
-        body.append(a.value, a.value)
+        body.append(a.value, a.value);
       });
+      body.append('adventuresEvent', adventuresEvent);
+      body.append('traveler', traveler);
+      body.append('empiresEvent', empiresEvent);
+      body.append('randmark', randmark);
+      body.append('project', project);
+      body.append('menagerieEvent', menagerieEvent);
+      body.append('way', way);
       const response: any = await fetch(getPath() + asyncConstant.PUT_DOMINION, {
         mode: 'cors',
         method: 'POST',
